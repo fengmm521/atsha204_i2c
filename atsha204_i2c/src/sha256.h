@@ -41,9 +41,9 @@ extern "C"
        uint32_t len[2];
    } sha256_context;
 
-   void sha256_init(sha256_context *);
-   void sha256_hash(sha256_context *, uint8_t * /* data */, uint32_t /* len */);
-   void sha256_done(sha256_context *, uint8_t * /* hash */);
+   void sha256_init_iic(sha256_context *);
+   void sha256_hash_iic(sha256_context *, uint8_t * /* data */, uint32_t /* len */);
+   void sha256_done_iic(sha256_context *, uint8_t * /* hash */);
 
 #ifdef __cplusplus
 }

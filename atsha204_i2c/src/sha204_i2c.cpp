@@ -117,40 +117,40 @@ uint8_t atsha204Class::simpleMacOffline(uint8_t *challenge,
 {
 	uint8_t temp[8];
 	sha256_context ctx;
-	sha256_init(&ctx);
-	sha256_hash(&ctx, key, 32);
-	sha256_hash(&ctx, challenge, 32);
+	sha256_init_iic(&ctx);
+	sha256_hash_iic(&ctx, key, 32);
+	sha256_hash_iic(&ctx, challenge, 32);
 	//opcode
 	temp[0] = 0x08;
-	sha256_hash(&ctx, temp, 1);
+	sha256_hash_iic(&ctx, temp, 1);
 	//mode
 	temp[0] = 0x00;
-	sha256_hash(&ctx, temp, 1);
+	sha256_hash_iic(&ctx, temp, 1);
 	//param2
 	temp[0] = 0;
 	temp[1] = 0;
-	sha256_hash(&ctx, temp, 2);
+	sha256_hash_iic(&ctx, temp, 2);
 	//otp
 	memset(temp, 0, sizeof(temp));
 	//otp 0-7
-	sha256_hash(&ctx, temp, 8);
+	sha256_hash_iic(&ctx, temp, 8);
 	//otp 8-10
-	sha256_hash(&ctx, temp, 3);
+	sha256_hash_iic(&ctx, temp, 3);
 	//sn 8
 	temp[0] = 0xEE;
-	sha256_hash(&ctx, temp, 1);
+	sha256_hash_iic(&ctx, temp, 1);
 	//sn 4-7
 	memset(temp, 0, sizeof(temp));
-	sha256_hash(&ctx, temp, 4);
+	sha256_hash_iic(&ctx, temp, 4);
 	//sn 0-1
 	temp[0] = 0x01;
 	temp[1] = 0x23;
-	sha256_hash(&ctx, temp, 2);
+	sha256_hash_iic(&ctx, temp, 2);
 	//sn 2-3;
 	memset(temp, 0, sizeof(temp));
-	sha256_hash(&ctx, temp, 2);
+	sha256_hash_iic(&ctx, temp, 2);
 
-	sha256_done(&ctx, result);
+	sha256_done_iic(&ctx, result);
 	return SHA204_SUCCESS;
 }
 

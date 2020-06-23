@@ -129,7 +129,7 @@ static void _hash(sha256_context *ctx)
 } /* _hash */
 
 /* -------------------------------------------------------------------------- */
-void sha256_init(sha256_context *ctx)
+void sha256_init_iic(sha256_context *ctx)
 {
     ctx->len[0] = ctx->len[1] = 0;
     ctx->hash[0] = 0x6a09e667; ctx->hash[1] = 0xbb67ae85;
@@ -137,10 +137,10 @@ void sha256_init(sha256_context *ctx)
     ctx->hash[4] = 0x510e527f; ctx->hash[5] = 0x9b05688c;
     ctx->hash[6] = 0x1f83d9ab; ctx->hash[7] = 0x5be0cd19;
 
-} /* sha256_init */
+} /* sha256_init_iic */
 
 /* -------------------------------------------------------------------------- */
-void sha256_hash(sha256_context *ctx, uint8_t *dat, uint32_t sz)
+void sha256_hash_iic(sha256_context *ctx, uint8_t *dat, uint32_t sz)
 {
     register uint32_t i = ctx->len[0] & 63, l, j;
 
@@ -157,7 +157,7 @@ void sha256_hash(sha256_context *ctx, uint8_t *dat, uint32_t sz)
 } /* _hash */
 
 /* -------------------------------------------------------------------------- */
-void sha256_done(sha256_context *ctx, uint8_t *buf)
+void sha256_done_iic(sha256_context *ctx, uint8_t *buf)
 {
     uint32_t i = (uint32_t)(ctx->len[0] & 63), j = ((~i) & 3) << 3;
 
@@ -180,7 +180,7 @@ void sha256_done(sha256_context *ctx, uint8_t *buf)
        ctx->buf[i % 16] = 0, /* may remove this line in case of a DIY cleanup */
        buf[i] = (uint8_t)(ctx->hash[i >> 2] >> ((~i & 3) << 3));
 
-} /* sha256_done */
+} /* sha256_done_iic */
 
 
 #ifdef SELF_TEST
@@ -218,9 +218,9 @@ int main(int argc, char *argv[])
 
     for (j = 0; j < (sizeof(buf)/sizeof(buf[0])); j += 2)
     {
-        sha256_init(&ctx);
-        sha256_hash(&ctx, (uint8_t *)buf[j], (uint32_t)strlen(buf[j]));
-        sha256_done(&ctx, hv);
+        sha256_init_iic(&ctx);
+        sha256_hash_iic(&ctx, (uint8_t *)buf[j], (uint32_t)strlen(buf[j]));
+        sha256_done_iic(&ctx, hv);
         printf("input = %s\ndigest: %s\nresult: ", buf[j], buf[j+1]);
         for (i = 0; i < 32; i++) printf("%02x%s", hv[i], ((i%4)==3)?" ":"");
         printf("\n\n");
@@ -229,9 +229,9 @@ int main(int argc, char *argv[])
     for (j = 1; j < (uint32_t)argc; j++)
     {
         printf("argv[%d]: %s\nresult: ", (int)j, argv[j]);
-        sha256_init(&ctx);
-        sha256_hash(&ctx, (uint8_t *)argv[j], (uint32_t)strlen(argv[j]));
-        sha256_done(&ctx, hv);
+        sha256_init_iic(&ctx);
+        sha256_hash_iic(&ctx, (uint8_t *)argv[j], (uint32_t)strlen(argv[j]));
+        sha256_done_iic(&ctx, hv);
         for (i = 0; i < 32; i++) printf("%02x%s", hv[i], ((i%4)==3)?" ":"");
         printf("\n\n");
     }
